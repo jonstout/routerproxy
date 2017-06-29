@@ -9,72 +9,19 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let msg = 'stuff and\nstuff and stuff and\nstuff and\nstuff and stuff and\nstuff and\nstuff and stuff and\n';
-
     this.state = {
-      devices: [
-        {
-          id:      1,
-          name:    'app-1.sample.com',
-          address: '127.0.0.1',
-          location: {
-            state: 'IN',
-            city:  'Bloomington'
-          },
-          response: {
-            status:  'ok',
-            message: msg
-          }
-        },
-        {
-          id:      2,
-          name:    'server-1.sample.com',
-          address: '127.0.0.1',
-          location: {
-            state: 'IN',
-            city:  'Bloomington'
-          },
-          response: {
-            status:  'wait',
-            message: msg
-          }
-        },
-        {
-          id:      3,
-          name:    'server-2.sample.com',
-          address: '127.0.0.1',
-          location: {
-            state: 'IN',
-            city:  'Bloomington'
-          },
-          response: {
-            status:  'error',
-            message: msg
-          }
-        },
-        {
-          id:      4,
-          name:    'server-4.sample.com',
-          address: '127.0.0.1',
-          location: {
-            state: 'IN',
-            city:  'Bloomington'
-          },
-          response: {
-            status:  '',
-            message: msg
-          }
-        }
-      ]
+      devices: []
     };
-  }
 
-  putSelectedDevice(deviceId) {
+    const socket = new WebSocket('ws://jonstout-dev7.grnoc.iu.edu:8080/api/ws');
 
-  }
+    socket.addEventListener('open', function (event) {
+      socket.send('Hello Server!');
+    });
 
-  delSelectedDevice(deviceId) {
-
+    socket.addEventListener('message', function (event) {
+      console.log('Message from server', event.data);
+    });
   }
 
   render() {
@@ -83,12 +30,7 @@ class App extends Component {
         <Header />
 
         <div className="content">
-          <DeviceList devices={this.state.devices} />
-          <DeviceList devices={this.state.devices} />
-          <DeviceList devices={this.state.devices} />
-          <DeviceList devices={this.state.devices} />
-          <DeviceList devices={this.state.devices} />
-          <DeviceList devices={this.state.devices} />
+          <DeviceList />
         </div>
       </div>
     );

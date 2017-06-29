@@ -9,8 +9,7 @@ export class Device extends Component {
       id:       props.id,
       name:     props.name,
       address:  props.address,
-      location: props.location,
-      response: props.response
+      location: props.location
     };
   }
 
@@ -18,15 +17,15 @@ export class Device extends Component {
     const collapseId  = "collapse-" + this.state.id.toString();
     const collapseRef = "#collapse-" + this.state.id.toString();
 
-    const message = this.state.response.message;
+    const message = 'text\ntext\ntext';
 
-    let status = this.state.response.status;
+    let status = 'ok';
     let statusSym = null;
-    if (status == 'ok') {
+    if (status === 'ok') {
         statusSym = (<span className="glyphicon glyphicon-ok"></span>);
-    } else if (status == 'wait') {
+    } else if (status === 'wait') {
       statusSym = (<span className="glyphicon glyphicon-refresh"></span>);
-    } else if (status == 'error') {
+    } else if (status === 'error') {
       statusSym = (<span className="glyphicon glyphicon-remove"></span>);
     } else {
       let style = { color: 'transparent' };
@@ -39,7 +38,7 @@ export class Device extends Component {
 
           <div className="device-desc" data-toggle="collapse" href={collapseRef}>
             <h4 className="device-name">
-              {statusSym} {this.state.name} - {this.state.address} <small>{this.state.location.city}, {this.state.location.state}</small>
+              {statusSym} {this.state.name} - {this.state.address} <small>{this.state.location}</small>
             </h4>
           </div>
 
@@ -62,7 +61,17 @@ export class Device extends Component {
 export class DeviceList extends Component {
   constructor(props) {
     super(props);
-    this.state = {devices: props.devices};
+    this.state = {devices: []};
+  }
+
+  componentDidMount() {
+    fetch('/api/device').then(function(response) {
+      return response.json();
+    }).then(function(json) {
+      this.setState({devices: json});
+    }.bind(this)).catch(function(error) {
+      console.log(error);
+    });
   }
 
   render() {
@@ -70,10 +79,9 @@ export class DeviceList extends Component {
       return (<Device
               id={device.id}
               key={device.id}
-              name={device.name}
-              address={device.address}
-              location={device.location}
-              response={device.response}/>);
+              name={device.hostname}
+              address={device.ip_address}
+              location={device.location}/>);
     });
 
     return (

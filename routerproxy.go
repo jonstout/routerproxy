@@ -3,9 +3,14 @@ package main
 import "fmt"
 import "sync"
 import "time"
+import "net/http"
+import "io"
+import "encoding/json"
 
 import "golang.org/x/crypto/ssh"
+import "golang.org/x/net/websocket"
 
+import "github.com/jonstout/routerproxy/database"
 import "github.com/jonstout/routerproxy/device"
 
 func testSSH() {
@@ -70,6 +75,25 @@ func testSSH() {
 	fmt.Println(time.Since(gt))
 }
 
+func echo(ws *websocket.Conn) {
+	io.Copy(ws, ws)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, `{"device": "switch.test.com"}`)
+}
+
+func devices(w http.ResponseWriter, r *http.Request) {
+	encoder := json.NewEncoder(w)
+
+	devices := database.Devices()
+	encoder.Encode(devices)
+}
+
 func main() {
-	testSSH()
+    http.HandleFunc("/", handler)
+    http.HandleFunc("/device", devices)
+
+    http.Handle("/ws", websocket.Handler(echo))
+    http.ListenAndServe(":8000", nil)
 }

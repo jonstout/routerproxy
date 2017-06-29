@@ -20,16 +20,12 @@ export class Header extends Component {
   }
 
   handleScroll(event) {
-    console.log(event);
-
     var offset;
     if (event.path === undefined) {
       offset = event.pageY;
     } else {
       offset = event.path[1].pageYOffset;
     }
-
-    console.log(offset);
 
     if (offset > 150) {
       this.setState({networkTitleStyle: 'sm-network-title'});
