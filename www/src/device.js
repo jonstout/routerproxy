@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
-import './device.css';
 import Toggle from 'react-bootstrap-toggle';
+
+import './device.css';
+
+import { DeviceStatus } from './device/status.js';
 
 export class Device extends Component {
   constructor(props) {
@@ -23,19 +26,6 @@ export class Device extends Component {
 
     const message = "text\ntext\ntext";
 
-    let status = 'ok';
-    let statusSym = null;
-    if (status === 'ok') {
-        statusSym = (<span className="glyphicon glyphicon-ok"></span>);
-    } else if (status === 'wait') {
-      statusSym = (<span className="glyphicon glyphicon-refresh"></span>);
-    } else if (status === 'error') {
-      statusSym = (<span className="glyphicon glyphicon-remove"></span>);
-    } else {
-      let style = { color: 'transparent' };
-      statusSym = (<span className="glyphicon glyphicon-ok" style={style}></span>);
-    }
-
     return (
       <div className="device-card">
 
@@ -43,7 +33,8 @@ export class Device extends Component {
 
           <div className="device-desc" data-toggle="collapse" href={collapseRef}>
             <h4 className="device-name">
-              {statusSym} {this.props.name} - {this.props.address} <small>{this.props.location}</small>
+              
+              <DeviceStatus status="ok"/> {this.props.name} - {this.props.address} <small>{this.props.location}</small>
             </h4>
           </div>
 
