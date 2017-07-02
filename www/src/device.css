@@ -1,3 +1,11 @@
+.device-card {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ddd;
+    box-shadow: 0px 5px 5px #aaa;
+    margin:     0px 0px 20px 0px;
+}
+
 .device-list {
     align-items: center;
     display:     flex;
@@ -5,7 +13,7 @@
 }
 
 .device-header {
-    background: #eee;
+    background: #fff;
     margin:     5px;
     width:      95vw;
 
@@ -15,7 +23,7 @@
 
 .device-content {
     margin: 5px;
-    width:      95vw;
+    width:  95vw;
 }
 
 .device-desc {

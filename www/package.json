@@ -5,6 +5,7 @@
   "homepage": "http://jonstout-dev7.grnoc.iu.edu/routerproxy",
   "dependencies": {
     "react": "^15.5.4",
+    "react-bootstrap-toggle": "^2.0.8",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {

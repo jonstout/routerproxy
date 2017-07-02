@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 
 import './device.css';
+import Toggle from 'react-bootstrap-toggle';
 
 export class Device extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id:       props.id,
-      name:     props.name,
-      address:  props.address,
-      location: props.location
+      toggleActive: false
     };
+
+    this.onToggle = this.onToggle.bind(this);
+  }
+
+  onToggle() {
+    this.setState({toggleActive: !this.state.toggleActive});
   }
 
   render() {
-    const collapseId  = "collapse-" + this.state.id.toString();
-    const collapseRef = "#collapse-" + this.state.id.toString();
+    const collapseId  = "collapse-" + this.props.id.toString();
+    const collapseRef = "#collapse-" + this.props.id.toString();
 
-    const message = 'text\ntext\ntext';
+    const message = "text\ntext\ntext";
 
     let status = 'ok';
     let statusSym = null;
@@ -33,17 +37,18 @@ export class Device extends Component {
     }
 
     return (
-      <div>
+      <div className="device-card">
+
         <div className="device-header">
 
           <div className="device-desc" data-toggle="collapse" href={collapseRef}>
             <h4 className="device-name">
-              {statusSym} {this.state.name} - {this.state.address} <small>{this.state.location}</small>
+              {statusSym} {this.props.name} - {this.props.address} <small>{this.props.location}</small>
             </h4>
           </div>
 
           <div className="device-toggle">
-            <input type="checkbox" data-toggle="toggle" data-size="small" data-on="Run" data-off="Skip"/>
+            <Toggle onClick={this.onToggle} on="Run" off="Skip" size="sm" active={this.state.toggleActive} />
           </div>
 
         </div>
@@ -64,18 +69,26 @@ export class DeviceList extends Component {
     this.state = {devices: []};
   }
 
-  componentDidMount() {
+  tick() {
+    console.log(this.state);
     fetch('/api/device').then(function(response) {
       return response.json();
     }).then(function(json) {
-      this.setState({devices: json});
+      this.setState((prevState) => {
+        return {devices: json};
+      });
     }.bind(this)).catch(function(error) {
       console.log(error);
     });
   }
 
+  componentDidMount() {
+    this.tick();
+    this.interval = setInterval(() => this.tick(), 3000);
+  }
+
   render() {
-    const devices = this.state.devices.map(function(device) {
+    const devices = this.state.devices.map((device) => {
       return (<Device
               id={device.id}
               key={device.id}
