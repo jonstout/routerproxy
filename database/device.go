@@ -1,5 +1,7 @@
 package database
 
+import "time"
+
 type Device struct {
 	Description string `json:"description"`
 	Hostname    string `json:"hostname"`
@@ -11,20 +13,20 @@ type Device struct {
 
 
 func Devices() []Device {
+	t := time.Now().Unix()
+	ip := ""
+	if t % 2 == 0 {
+		ip = "192.168.1.1"
+	} else {
+		ip = "127.0.0.1"
+	}
+
 	result := []Device{
 		Device{
 			Description: "a little description",
 			Hostname: "test.domain.com",
-			ID: 0,
-			IPAddress: "127.0.0.1",
-			Location: "city, ST",
-			POP: "POP",
-		},
-		Device{
-			Description: "a little description",
-			Hostname: "test.domain.com",
 			ID: 1,
-			IPAddress: "127.0.0.1",
+			IPAddress: ip,
 			Location: "city, ST",
 			POP: "POP",
 		},
@@ -40,6 +42,14 @@ func Devices() []Device {
 			Description: "a little description",
 			Hostname: "test.domain.com",
 			ID: 3,
+			IPAddress: "127.0.0.1",
+			Location: "city, ST",
+			POP: "POP",
+		},
+		Device{
+			Description: "a little description",
+			Hostname: "test.domain.com",
+			ID: 4,
 			IPAddress: "127.0.0.1",
 			Location: "city, ST",
 			POP: "POP",

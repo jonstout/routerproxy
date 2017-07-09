@@ -9,44 +9,39 @@ import { DeviceStatus } from './device/status.js';
 export class Device extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      toggleActive: false
-    };
+    this.state = {};
 
     this.onToggle = this.onToggle.bind(this);
   }
 
   onToggle() {
-    this.setState({toggleActive: !this.state.toggleActive});
+    this.props.setIsSelected(this.props.device.id, !this.props.device.isSelected);
   }
 
   render() {
-    const collapseId  = "collapse-" + this.props.id.toString();
-    const collapseRef = "#collapse-" + this.props.id.toString();
+    const device = this.props.device;
 
-    const message = "text\ntext\ntext";
+    const collapseId  = "collapse-" + device.id.toString();
+    const collapseRef = "#collapse-" + device.id.toString();
 
     return (
-      <div className="device-card">
+      <div className="panel panel-default">
 
         <div className="device-header">
-
           <div className="device-desc" data-toggle="collapse" href={collapseRef}>
             <h4 className="device-name">
-              
-              <DeviceStatus status="ok"/> {this.props.name} - {this.props.address} <small>{this.props.location}</small>
+              <DeviceStatus status={device.responseStatus}/> {device.hostname} - {device.ip_address} <small>{device.location}</small>
             </h4>
           </div>
 
           <div className="device-toggle">
-            <Toggle onClick={this.onToggle} on="Run" off="Skip" size="sm" active={this.state.toggleActive} />
+            <Toggle onClick={this.onToggle} on="Run" off="Skip" size="sm" active={device.isSelected} />
           </div>
-
         </div>
 
         <div className="device-content collapse" id={collapseId}>
           <pre>
-            {message}
+            {device.response}
           </pre>
         </div>
       </div>
@@ -60,37 +55,19 @@ export class DeviceList extends Component {
     this.state = {devices: []};
   }
 
-  tick() {
-    console.log(this.state);
-    fetch('/api/device').then(function(response) {
-      return response.json();
-    }).then(function(json) {
-      this.setState((prevState) => {
-        return {devices: json};
-      });
-    }.bind(this)).catch(function(error) {
-      console.log(error);
-    });
-  }
-
-  componentDidMount() {
-    this.tick();
-    this.interval = setInterval(() => this.tick(), 3000);
-  }
-
   render() {
-    const devices = this.state.devices.map((device) => {
+    const devices = this.props.devices.map((device) => {
       return (<Device
-              id={device.id}
               key={device.id}
-              name={device.hostname}
-              address={device.ip_address}
-              location={device.location}/>);
+              device={device}
+              setIsSelected={this.props.setIsSelected}/>);
     });
 
     return (
       <div className="device-list">
-        <h2>Core Routers</h2>
+        <h2 className="device-group-title">Routers</h2>
+        {devices}
+        <h2 className="device-group-title">Switches</h2>
         {devices}
       </div>
     );

@@ -1,9 +1,10 @@
-.device-card {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #ddd;
-    box-shadow: 0px 5px 5px #aaa;
-    margin:     0px 0px 20px 0px;
+.device-group-title {
+    border-style: hidden hidden solid hidden;
+    border-width: 5px;
+    border-color: #892A2C;
+
+    width: 95vw;
+    text-align: left;
 }
 
 .device-list {

@@ -9,6 +9,8 @@ export class Header extends Component {
     this.state = {
       networkTitleStyle: 'network-title'
     };
+
+    this.onExecuteCommand = this.onExecuteCommand.bind(this);
   }
 
   componentDidMount() {
@@ -27,7 +29,7 @@ export class Header extends Component {
       offset = event.path[1].pageYOffset;
     }
 
-    if (offset > 150) {
+    if (offset > 75) {
       this.setState({networkTitleStyle: 'sm-network-title'});
     }
     else if (offset < 120) {
@@ -35,33 +37,48 @@ export class Header extends Component {
     }
   }
 
+  onExecuteCommand() {
+    let args = {
+      route_table: this.routeTable.value,
+      selection:   this.command.value,
+      text:        this.commandText.value
+    };
+
+    this.props.onExecuteCommand(args);
+  }
+
   render() {
     return (
       <div className="header">
 
-        <h2 className={this.state.networkTitleStyle}>
-          Internet2 Advanced Layer 2 <small>RouterProxy</small>
-        </h2>
+        <h1 className={this.state.networkTitleStyle}>
+          Internet2 Advanced Layer 2
+        </h1>
         <p className={this.state.networkTitleStyle}>
-          A service of the Internet2 Network Operations Center
+          a service of the Internet2 Network Operations Center
         </p>
 
         <div>
           <form className="form-inline header-elems">
-            <select className="form-control outer-elem">
+            <select className="form-control outer-elem"
+                    ref={(input) => { this.command = input; }}>
               <option>show version</option>
               <option>show bgp</option>
             </select>
 
-            <select className="form-control center-elem">
+            <select className="form-control center-elem"
+                    ref={(input) => { this.routeTable = input; }}>
               <option></option>
               <option>default</option>
               <option>vrf</option>
             </select>
 
-            <input type="text" className="form-control cmd-elem" id="query" placeholder="Command"/>
+            <input type="text" className="form-control cmd-elem"
+                   id="query"
+                   placeholder="Command"
+                   ref={(input) => { this.commandText = input; }} />
 
-            <button type="submit" className="btn btn-default outer-elem">Submit</button>
+            <button type="button" onClick={this.onExecuteCommand} className="btn btn-default outer-elem">Execute</button>
           </form>
         </div>
 
