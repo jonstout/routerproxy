@@ -60,7 +60,6 @@ class App extends Component {
         }
 
         this.setState({ [deviceID]: device });
-        console.log(this.state);
       }
     }.bind(this)).catch(function(error) {
       console.log(error);

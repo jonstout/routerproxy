@@ -67,8 +67,6 @@ export class DeviceList extends Component {
       <div className="device-list">
         <h2 className="device-group-title">Routers</h2>
         {devices}
-        <h2 className="device-group-title">Switches</h2>
-        {devices}
       </div>
     );
   }

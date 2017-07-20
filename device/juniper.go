@@ -15,8 +15,8 @@ func NewJuniper(config *ssh.ClientConfig) *Juniper {
 	return &Juniper{config}
 }
 
-func (c *Juniper) Execute(cmd *Command) ([]byte, error) {
-	client, err := ssh.Dial("tcp", cmd.Addr, c.config)
+func (c *Juniper) Execute(addr string, cmd *Command) ([]byte, error) {
+	client, err := ssh.Dial("tcp", addr, c.config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,14 +63,14 @@ func (c *Juniper) Execute(cmd *Command) ([]byte, error) {
 	}()
 
 	input.Write([]byte("set cli screen-length 0\n"))
-	input.Write([]byte(cmd.Text))
+	input.Write(append([]byte(cmd.Selection), "\n"...))
 
 	bytes := make([]byte, 0, 1024)
 	for {
 		select {
 		case l := <-newLine:
 			bytes = append(bytes, l...)
-		case <-time.After(time.Millisecond * 200):
+		case <-time.After(time.Millisecond * 500):
 			session.Close()
 			return bytes, err
 		}
